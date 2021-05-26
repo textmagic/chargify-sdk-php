@@ -1,5 +1,0 @@
-=======
-Refunds
-=======
-
-coming soon

@@ -1,5 +1,0 @@
-=====
-Stats
-=====
-
-coming soon

@@ -1,5 +1,0 @@
-==========
-Components
-==========
-
-coming soon

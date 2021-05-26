@@ -7,8 +7,5 @@
 vendor/
 composer.lock
 
-docs/build
-
 tests/phpunit/artifacts/
 tests/phpunit/configs/ClientConfig.Dev.php
-tests/phpunit/configs/ClientV2Config.Dev.php
