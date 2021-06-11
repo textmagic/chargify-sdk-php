@@ -35,6 +35,7 @@ use Crucial\Service\Chargify\Refund;
 use Crucial\Service\Chargify\Statement;
 use Crucial\Service\Chargify\Stats;
 use Crucial\Service\Chargify\Subscription;
+use Crucial\Service\Chargify\PaymentProfile;
 use Crucial\Service\Chargify\Transaction;
 use Crucial\Service\Chargify\Webhook;
 
@@ -283,6 +284,16 @@ class Chargify
     public function coupon()
     {
         return new Coupon($this);
+    }
+
+    /**
+     * Helper for instantiating an instance of PaymentProfile
+     *
+     * @return PaymentProfile
+     */
+    public function paymentProfile()
+    {
+        return new PaymentProfile($this);
     }
 
     /**

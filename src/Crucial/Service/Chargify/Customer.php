@@ -174,6 +174,34 @@ class Customer extends AbstractEntity
     }
 
     /**
+     * (Optional) Tax exempt
+     *
+     * @param bool $taxExempt
+     *
+     * @return Customer
+     */
+    public function setTaxExempt($taxExempt)
+    {
+        $this->setParam('tax_exempt', $taxExempt);
+
+        return $this;
+    }
+
+    /**
+     * (Optional) Vat number
+     *
+     * @param string $vatNumber
+     *
+     * @return Customer
+     */
+    public function setVatNumber($vatNumber)
+    {
+        $this->setParam('vat_number', $vatNumber);
+
+        return $this;
+    }
+
+    /**
      * (Optional, but encouraged) The unique identifier used within your own
      * application for this customer
      *

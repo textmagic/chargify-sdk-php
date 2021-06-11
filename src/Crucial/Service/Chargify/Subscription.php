@@ -138,6 +138,20 @@ class Subscription extends AbstractEntity
     }
 
     /**
+     * Set already created payment profile by id
+     *
+     * @param int $paymentProfileId
+     *
+     * @return Subscription
+     */
+    public function setPaymentProfileId($paymentProfileId)
+    {
+        $this->setParam('payment_profile_id', $paymentProfileId);
+
+        return $this;
+    }
+
+    /**
      * Set payment profile attributes. Useful when accepting (or requiring) a
      * credit card at signup.
      *

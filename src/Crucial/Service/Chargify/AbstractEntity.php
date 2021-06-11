@@ -207,6 +207,8 @@ abstract class AbstractEntity implements \ArrayAccess, \Iterator, \Countable
         // set errors, if any
         if (!empty($return['errors'])) {
             $this->_errors = $return['errors'];
+        } else if (!empty($return['error'])) {
+            $this->_errors = [$return['error']];
         }
 
         return $return;
