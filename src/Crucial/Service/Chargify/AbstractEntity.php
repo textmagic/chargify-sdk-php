@@ -30,6 +30,13 @@ abstract class AbstractEntity implements \ArrayAccess, \Iterator, \Countable
     protected $_params = array();
 
     /**
+     * Status code thrown by the API
+     *
+     * @var int
+     */
+    protected $_statusCode = 0;
+
+    /**
      * Container for errors thrown by the API
      *
      * @var array
@@ -141,6 +148,16 @@ abstract class AbstractEntity implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
+     * Status code returned from Chargify.
+     *
+     * @return int
+     */
+    public function getStatusCode()
+    {
+        return $this->_statusCode;
+    }
+
+    /**
      * Helper to determine if there are errors with the request
      *
      * @return bool
@@ -173,8 +190,10 @@ abstract class AbstractEntity implements \ArrayAccess, \Iterator, \Countable
     public function getResponseArray($response)
     {
         $return = array();
+
         if (!($response instanceof Response)) {
-            $this->_errors['Crucial_Service_Chargify']['networking error'] = 'no response';
+            $this->_statusCode = 500;
+            $this->_errors = ['Server not responded'];
 
             return $return;
         }
@@ -182,13 +201,15 @@ abstract class AbstractEntity implements \ArrayAccess, \Iterator, \Countable
         $body = $response->getBody();
         $body = trim((string)$body);
 
+        $code = $response->getStatusCode();
+        $this->_statusCode = $code;
+
         /**
          * return early on bad status codes
          */
-        $code       = $response->getStatusCode();
         $errorCodes = array(404, 401, 500);
         if (in_array($code, $errorCodes)) {
-            $this->_errors['Crucial_Service_Chargify']['Bad status code'] = $code;
+            $this->_errors = ['Server responded with a status of ' . $code . ' code.'];
 
             return $return;
         }

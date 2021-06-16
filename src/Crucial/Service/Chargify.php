@@ -18,6 +18,7 @@
 namespace Crucial\Service;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
@@ -201,6 +202,8 @@ class Chargify
             } else {
                 $response = false;
             }
+        } catch (ConnectException $e) {
+            $response = false;
         }
 
         $this->lastResponse = $response;
