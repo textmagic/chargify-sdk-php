@@ -140,7 +140,7 @@ class Customer extends AbstractEntity
      */
     public function setState($state)
     {
-        $this->setParam('state', $state);
+        $this->setParam('state_name', $state);
 
         return $this;
     }
