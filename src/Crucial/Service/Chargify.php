@@ -120,17 +120,17 @@ class Chargify
         $this->config = $config;
 
         // set individual properties
-        $this->hostname  = trim($config['hostname'], '/');
-        $this->apiKey    = $config['api_key'];
+        $url = parse_url($config['hostname']);
+        $this->hostname = ($url['scheme'] ? $url['scheme'] : 'https') . '://' . $url['host'] . ($url['port'] ? ':' . $url['port'] : '') . '/';
+        $this->apiKey = $config['api_key'];
         $this->sharedKey = $config['shared_key'];
 
         if (!empty($config['timeout'])) {
             $this->timeout   = $config['timeout'];
         }
 
-
         $this->httpClient = new Client([
-            'base_uri'        => 'https://' . $this->hostname . '/',
+            'base_uri'        => $this->hostname,
             'handler'         => HandlerStack::create(),
             'timeout'         => $this->timeout,
             'allow_redirects' => false,
