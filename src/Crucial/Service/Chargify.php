@@ -121,7 +121,7 @@ class Chargify
 
         // set individual properties
         $url = parse_url($config['hostname']);
-        $this->hostname = ($url['scheme'] ? $url['scheme'] : 'https') . '://' . $url['host'] . ($url['port'] ? ':' . $url['port'] : '') . '/';
+        $this->hostname = $url['scheme'] . '://' . $url['host'] . ((isset($url['port']) && $url['port']) ? ':' . $url['port'] : '') . '/';
         $this->apiKey = $config['api_key'];
         $this->sharedKey = $config['shared_key'];
 
