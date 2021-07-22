@@ -607,7 +607,6 @@ class Subscription extends AbstractEntity
      * @see  Subscription::setIncludeTrial()
      * @see  Subscription::setIncludeInitialCharge()
      * @link http://docs.chargify.com/api-migrations
-     * @todo ?? should this be moved to Crucial_Service_Chargify_Migration
      */
     public function migrate($subscriptionId)
     {
@@ -668,6 +667,48 @@ class Subscription extends AbstractEntity
         } else {
             $this->_data = array();
         }
+
+        return $this;
+    }
+
+    /**
+     * This will change the default payment profile on the subscription to the existing payment profile with the id specified.
+     *
+     * @param int $subscriptionId Existing subscription ID that you want to change
+     * @param int $paymentProfileId Existing payment method ID that you want to set
+     *
+     * @return Subscription
+     */
+    public function changePaymentProfile($subscriptionId, $paymentProfileId)
+    {
+        $service = $this->getService();
+        $response = $service->request('subscriptions/' . (int)$subscriptionId . '/payment_profiles/' . (int)$paymentProfileId . '/change_payment_profile', 'POST', '{}');
+        $responseArray = $this->getResponseArray($response);
+
+        if (!$this->isError()) {
+            $this->_data = $responseArray['payment_profile'];
+        } else {
+            $this->_data = array();
+        }
+
+        return $this;
+    }
+
+    /**
+     * This will delete a payment profile belonging to the customer on the subscription.
+     *
+     * @param int $subscriptionId Existing subscription ID that you want to change
+     * @param int $paymentProfileId Existing payment method ID that you want to delete
+     *
+     * @return Subscription
+     */
+    public function deletePaymentProfile($subscriptionId, $paymentProfileId)
+    {
+        $service = $this->getService();
+        $response = $service->request('subscriptions/' . (int)$subscriptionId . '/payment_profiles/' . (int)$paymentProfileId, 'DELETE', '{}');
+        $this->getResponseArray($response);
+
+        $this->_data = array();
 
         return $this;
     }
