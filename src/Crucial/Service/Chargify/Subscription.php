@@ -80,6 +80,20 @@ class Subscription extends AbstractEntity
     }
 
     /**
+     * The currency for subscription
+     *
+     * @param string $currency
+     *
+     * @return Subscription
+     */
+    public function setCurrency($currency)
+    {
+        $this->setParam('currency', $currency);
+
+        return $this;
+    }
+
+    /**
      * Array containing component IDs and quantities for components to be added
      * at subscription creation time. Array should look like this:
      *

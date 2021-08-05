@@ -20,6 +20,118 @@ namespace Crucial\Service\Chargify;
 class PaymentProfile extends AbstractEntity
 {
     /**
+     * Set first name
+     *
+     * @param string $firstName
+     *
+     * @return PaymentProfile
+     */
+    public function setFirstName(string $firstName)
+    {
+        $this->setParam('first_name', $firstName);
+
+        return $this;
+    }
+
+    /**
+     * Set last name
+     *
+     * @param string $lastName
+     *
+     * @return PaymentProfile
+     */
+    public function setLastName(string $lastName)
+    {
+        $this->setParam('last_name', $lastName);
+
+        return $this;
+    }
+
+    /**
+     * Set billing address
+     *
+     * @param string $billingAddress
+     *
+     * @return PaymentProfile
+     */
+    public function setBillingAddress(string $billingAddress)
+    {
+        $this->setParam('billing_address', $billingAddress);
+
+        return $this;
+    }
+
+    /**
+     * Set billing address 2
+     *
+     * @param string $billingAddress2
+     *
+     * @return PaymentProfile
+     */
+    public function setBillingAddress2(string $billingAddress2)
+    {
+        $this->setParam('billing_address_2', $billingAddress2);
+
+        return $this;
+    }
+
+    /**
+     * Set billing city
+     *
+     * @param string $billingCity
+     *
+     * @return PaymentProfile
+     */
+    public function setBillingCity(string $billingCity)
+    {
+        $this->setParam('billing_city', $billingCity);
+
+        return $this;
+    }
+
+    /**
+     * Set billing state
+     *
+     * @param string $billingState
+     *
+     * @return PaymentProfile
+     */
+    public function setBillingState(string $billingState)
+    {
+        $this->setParam('billing_state', $billingState);
+
+        return $this;
+    }
+
+    /**
+     * Set billing zip
+     *
+     * @param string $billingZip
+     *
+     * @return PaymentProfile
+     */
+    public function setBillingZip(string $billingZip)
+    {
+        $this->setParam('billing_zip', $billingZip);
+
+        return $this;
+    }
+
+    /**
+     * Set billing country
+     *
+     * @param string $billingCountry
+     *
+     * @return PaymentProfile
+     */
+    public function setBillingCountry(string $billingCountry)
+    {
+        $this->setParam('billing_country', $billingCountry);
+
+        return $this;
+    }
+
+    /**
      * Set customer id
      *
      * @param int $customerId
@@ -76,6 +188,61 @@ class PaymentProfile extends AbstractEntity
         $service = $this->getService();
         $rawData = $this->getRawData(array('payment_profile' => $this->_params));
         $response = $service->request('payment_profiles', 'POST', $rawData);
+        $responseArray = $this->getResponseArray($response);
+
+        if (!$this->isError()) {
+            $this->_data = $responseArray['payment_profile'];
+        } else {
+            $this->_data = array();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get payment profile by Chargify ID
+     *
+     * @param int $id
+     *
+     * @return PaymentProfile
+     */
+    public function readByChargifyId($id)
+    {
+        $service = $this->getService();
+
+        $response      = $service->request('payment_profiles/' . $id, 'GET');
+        $responseArray = $this->getResponseArray($response);
+
+        if (!$this->isError()) {
+            $this->_data = $responseArray['payment_profile'];
+        } else {
+            $this->_data = array();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Update the payment profile record in Chargify.
+     *
+     * @param int $id
+     *
+     * @return PaymentProfile
+     * @see PaymentProfile::setFirstName()
+     * @see PaymentProfile::setLastName()
+     * @see PaymentProfile::setBillingAddress()
+     * @see PaymentProfile::setBillingAddress2()
+     * @see PaymentProfile::setBillingCity()
+     * @see PaymentProfile::setBillingState()
+     * @see PaymentProfile::setBillingZip()
+     * @see PaymentProfile::setBillingCountry()
+     */
+    public function update($id)
+    {
+        $service = $this->getService();
+
+        $rawData       = $this->getRawData(array('payment_profile' => $this->getParams()));
+        $response      = $service->request('payment_profiles/' . (int)$id, 'PUT', $rawData);
         $responseArray = $this->getResponseArray($response);
 
         if (!$this->isError()) {
