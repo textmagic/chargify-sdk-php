@@ -338,13 +338,28 @@ class Subscription extends AbstractEntity
      * Boolean, default 0. If 1 is sent the customer will migrate to the new product with a
      *   trial if one is available. If 0 is sent, the trial period will be ignored.
      *
-     * @param int $includeTrial
+     * @param bool $includeTrial
      *
      * @return Subscription
      */
-    public function setIncludeTrial($includeTrial = 0)
+    public function setIncludeTrial($includeTrial = false)
     {
-        $this->setParam('include_trial', $includeTrial);
+        $this->setParam('include_trial', $includeTrial ? 1 : 0);
+
+        return $this;
+    }
+
+    /**
+     * Boolean, default 0.  If 1 is passed, the existing subscription balance will NOT be
+     *   cleared/reset before adding the additional reactivation charges.
+     *
+     * @param bool $includeTrial
+     *
+     * @return Subscription
+     */
+    public function setResume($resume = false)
+    {
+        $this->setParam('resume', $resume ? 1 : 0);
 
         return $this;
     }
@@ -517,13 +532,16 @@ class Subscription extends AbstractEntity
     {
         $service = $this->getService();
 
-        // this PUT request accepts a query string of 'include_trial'
+        // this PUT request accepts a query string of 'include_trial' and/or 'resume'
         $params = array();
         $includeTrial = $this->getParam('include_trial');
         if (is_int($includeTrial)) {
             $params['include_trial'] = $includeTrial;
         }
-
+        $resume = $this->getParam('resume');
+        if (is_int($resume)) {
+            $params['resume'] = $resume;
+        }
         $response = $service->request('subscriptions/' . (int)$id . '/reactivate', 'PUT', '', $params);
         $responseArray = $this->getResponseArray($response);
 
