@@ -365,6 +365,21 @@ class Subscription extends AbstractEntity
     }
 
     /**
+     * Boolean, default 1.  If 1 is sent, Chargify will use service credits and prepayments upon reactivation.
+     * If 0 is sent, the service credits and prepayments will be ignored.
+     *
+     * @param bool $useCredit
+     *
+     * @return Subscription
+     */
+    public function setUseCredit($useCredit = true)
+    {
+        $this->setParam('use_credits_and_prepayments', $useCredit ? 1 : 0);
+
+        return $this;
+    }
+
+    /**
      * Enter description here...
      *
      * @param string $coupon_code
