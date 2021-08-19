@@ -536,6 +536,24 @@ class Subscription extends AbstractEntity
     }
 
     /**
+     * Removing the delayed cancellation on a subscription will ensure that it doesn't get canceled at the end of the period that it is in.
+     *
+     * @param int $id
+     *
+     * @return Subscription
+     */
+    public function cancelDelayedCancellation($id)
+    {
+        $service = $this->getService();
+        $response = $service->request('subscriptions/' . (int)$id . '/delayed_cancel', 'DELETE', '{}');
+        $this->getResponseArray($response);
+
+        $this->_data = array();
+
+        return $this;
+    }
+
+    /**
      * Reactivate the given subscription ID
      *
      * @param int $id
