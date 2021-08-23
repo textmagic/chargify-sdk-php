@@ -105,7 +105,6 @@ class Subscription extends AbstractEntity
      * @param array $components
      *
      * @return Subscription
-     * @todo Unit test this
      */
     public function setComponents($components)
     {
@@ -282,13 +281,13 @@ class Subscription extends AbstractEntity
      * (Required when using cancelDelayed() ) Set the subscription to be cancelled at the end of the current
      * billing period.
      *
-     * @param bool $bool
+     * @param bool $cancelAtEndOfPeriod
      *
      * @return Subscription
      */
-    public function setCancelAtEndOfPeriod($bool)
+    public function setCancelAtEndOfPeriod($cancelAtEndOfPeriod = false)
     {
-        $this->setParam('cancel_at_end_of_period', intval($bool));
+        $this->setParam('cancel_at_end_of_period', intval($cancelAtEndOfPeriod));
 
         return $this;
     }
@@ -320,22 +319,22 @@ class Subscription extends AbstractEntity
     }
 
     /**
-     * Boolean, default 0. If 1 is sent initial charges will be assessed. If 0 is
+     * Boolean, default false. If true is sent initial charges will be assessed. If false is
      *   sent initial charges will be ignored.
      *
-     * @param int $initialCharge
+     * @param bool $initialCharge
      *
      * @return Subscription
      */
-    public function setIncludeInitialCharge($initialCharge = 0)
+    public function setIncludeInitialCharge($initialCharge = false)
     {
-        $this->setParam('include_initial_charge', $initialCharge);
+        $this->setParam('include_initial_charge', intval($initialCharge));
 
         return $this;
     }
 
     /**
-     * Boolean, default 0. If 1 is sent the customer will migrate to the new product with a
+     * Boolean, default false. If true is sent the customer will migrate to the new product with a
      *   trial if one is available. If 0 is sent, the trial period will be ignored.
      *
      * @param bool $includeTrial
@@ -344,29 +343,29 @@ class Subscription extends AbstractEntity
      */
     public function setIncludeTrial($includeTrial = false)
     {
-        $this->setParam('include_trial', $includeTrial ? 1 : 0);
+        $this->setParam('include_trial', $includeTrial ? 'true' : 'false');
 
         return $this;
     }
 
     /**
-     * Boolean, default 0.  If 1 is passed, the existing subscription balance will NOT be
+     * Boolean, default false. If true is passed, the existing subscription balance will NOT be
      *   cleared/reset before adding the additional reactivation charges.
      *
-     * @param bool $includeTrial
+     * @param bool $resume
      *
      * @return Subscription
      */
     public function setResume($resume = false)
     {
-        $this->setParam('resume', $resume ? 1 : 0);
+        $this->setParam('resume', $resume ? 'true' : 'false');
 
         return $this;
     }
 
     /**
-     * Boolean, default 1.  If 1 is sent, Chargify will use service credits and prepayments upon reactivation.
-     * If 0 is sent, the service credits and prepayments will be ignored.
+     * Boolean, default true. If true is sent, Chargify will use service credits and prepayments upon reactivation.
+     * If false is sent, the service credits and prepayments will be ignored.
      *
      * @param bool $useCredit
      *
@@ -374,7 +373,7 @@ class Subscription extends AbstractEntity
      */
     public function setUseCredit($useCredit = true)
     {
-        $this->setParam('use_credits_and_prepayments', $useCredit ? 1 : 0);
+        $this->setParam('use_credits_and_prepayments', $useCredit ? 'true' : 'false');
 
         return $this;
     }
@@ -560,22 +559,13 @@ class Subscription extends AbstractEntity
      *
      * @return Subscription
      * @see Subscription::setIncludeTrial()
+     * @see Subscription::setResume()
+     * @see Subscription::setUseCredit()
      */
     public function reactivate($id)
     {
         $service = $this->getService();
-
-        // this PUT request accepts a query string of 'include_trial' and/or 'resume'
-        $params = array();
-        $includeTrial = $this->getParam('include_trial');
-        if (is_int($includeTrial)) {
-            $params['include_trial'] = $includeTrial;
-        }
-        $resume = $this->getParam('resume');
-        if (is_int($resume)) {
-            $params['resume'] = $resume;
-        }
-        $response = $service->request('subscriptions/' . (int)$id . '/reactivate', 'PUT', '', $params);
+        $response = $service->request('subscriptions/' . (int)$id . '/reactivate', 'PUT', '', $this->getParams());
         $responseArray = $this->getResponseArray($response);
 
         $code = $response->getStatusCode();
@@ -701,7 +691,7 @@ class Subscription extends AbstractEntity
     public function listSubscriptions()
     {
         $service = $this->getService();
-        $response = $service->request('subscriptions', 'GET', NULL, $this->_params);
+        $response = $service->request('subscriptions', 'GET', NULL, $this->getParams());
         $responseArray = $this->getResponseArray($response);
 
         if (!$this->isError()) {
@@ -732,48 +722,6 @@ class Subscription extends AbstractEntity
         } else {
             $this->_data = array();
         }
-
-        return $this;
-    }
-
-    /**
-     * This will change the default payment profile on the subscription to the existing payment profile with the id specified.
-     *
-     * @param int $subscriptionId Existing subscription ID that you want to change
-     * @param int $paymentProfileId Existing payment method ID that you want to set
-     *
-     * @return Subscription
-     */
-    public function changePaymentProfile($subscriptionId, $paymentProfileId)
-    {
-        $service = $this->getService();
-        $response = $service->request('subscriptions/' . (int)$subscriptionId . '/payment_profiles/' . (int)$paymentProfileId . '/change_payment_profile', 'POST', '{}');
-        $responseArray = $this->getResponseArray($response);
-
-        if (!$this->isError()) {
-            $this->_data = $responseArray['payment_profile'];
-        } else {
-            $this->_data = array();
-        }
-
-        return $this;
-    }
-
-    /**
-     * This will delete a payment profile belonging to the customer on the subscription.
-     *
-     * @param int $subscriptionId Existing subscription ID that you want to change
-     * @param int $paymentProfileId Existing payment method ID that you want to delete
-     *
-     * @return Subscription
-     */
-    public function deletePaymentProfile($subscriptionId, $paymentProfileId)
-    {
-        $service = $this->getService();
-        $response = $service->request('subscriptions/' . (int)$subscriptionId . '/payment_profiles/' . (int)$paymentProfileId, 'DELETE', '{}');
-        $this->getResponseArray($response);
-
-        $this->_data = array();
 
         return $this;
     }

@@ -298,6 +298,48 @@ class PaymentProfile extends AbstractEntity
     }
 
     /**
+     * This will change the default payment profile on the subscription to the existing payment profile with the id specified.
+     *
+     * @param int $subscriptionId Existing subscription ID that you want to change
+     * @param int $paymentProfileId Existing payment method ID that you want to set
+     *
+     * @return PaymentProfile
+     */
+    public function changeSubscriptionPaymentProfile($subscriptionId, $paymentProfileId)
+    {
+        $service = $this->getService();
+        $response = $service->request('subscriptions/' . (int)$subscriptionId . '/payment_profiles/' . (int)$paymentProfileId . '/change_payment_profile', 'POST', '{}');
+        $responseArray = $this->getResponseArray($response);
+
+        if (!$this->isError()) {
+            $this->_data = $responseArray['payment_profile'];
+        } else {
+            $this->_data = array();
+        }
+
+        return $this;
+    }
+
+    /**
+     * This will delete a payment profile belonging to the customer on the subscription.
+     *
+     * @param int $subscriptionId Existing subscription ID that you want to change
+     * @param int $paymentProfileId Existing payment method ID that you want to delete
+     *
+     * @return PaymentProfile
+     */
+    public function deleteSubscriptionPaymentProfile($subscriptionId, $paymentProfileId)
+    {
+        $service = $this->getService();
+        $response = $service->request('subscriptions/' . (int)$subscriptionId . '/payment_profiles/' . (int)$paymentProfileId, 'DELETE', '{}');
+        $this->getResponseArray($response);
+
+        $this->_data = array();
+
+        return $this;
+    }
+
+    /**
      * This normalizes the array for us so we can rely on a consistent structure.
      *
      * @param array $responseArray
