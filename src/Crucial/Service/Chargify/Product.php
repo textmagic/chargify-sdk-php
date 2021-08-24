@@ -20,20 +20,6 @@ namespace Crucial\Service\Chargify;
 class Product extends AbstractEntity
 {
     /**
-     * Boolean, default false. If true is passed, retrieved prices for all currencies.
-     *
-     * @param bool $currencyPrices
-     *
-     * @return Product
-     */
-    public function setCurrencyPrices($currencyPrices = false)
-    {
-        $this->setParam('currency_prices', $currencyPrices ? 'true' : 'false');
-
-        return $this;
-    }
-
-    /**
      * List all products for your site
      *
      * @return Product
@@ -68,29 +54,6 @@ class Product extends AbstractEntity
 
         if (!$this->isError()) {
             $this->_data = $this->_normalizeResponseArray($responseArray);
-        } else {
-            $this->_data = array();
-        }
-
-        return $this;
-    }
-
-    /**
-     * List all products price points
-     *
-     * @see  Product::setCurrencyPrices()
-     *
-     * @return Product
-     */
-    public function listProductPricePoints($id)
-    {
-        $service = $this->getService();
-
-        $response      = $service->request('products/' . $id . '/price_points', 'GET', NULL, $this->getParams());
-        $responseArray = $this->getResponseArray($response);
-
-        if (!$this->isError()) {
-            $this->_data = $responseArray['price_points'];
         } else {
             $this->_data = array();
         }

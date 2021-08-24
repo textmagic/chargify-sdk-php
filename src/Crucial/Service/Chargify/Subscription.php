@@ -335,7 +335,7 @@ class Subscription extends AbstractEntity
 
     /**
      * Boolean, default false. If true is sent the customer will migrate to the new product with a
-     *   trial if one is available. If 0 is sent, the trial period will be ignored.
+     *   trial if one is available. If false is sent, the trial period will be ignored.
      *
      * @param bool $includeTrial
      *

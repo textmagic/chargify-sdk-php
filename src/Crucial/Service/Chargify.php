@@ -32,6 +32,7 @@ use Crucial\Service\Chargify\Coupon;
 use Crucial\Service\Chargify\Customer;
 use Crucial\Service\Chargify\Event;
 use Crucial\Service\Chargify\Product;
+use Crucial\Service\Chargify\PricePoint;
 use Crucial\Service\Chargify\Refund;
 use Crucial\Service\Chargify\Statement;
 use Crucial\Service\Chargify\Stats;
@@ -247,6 +248,16 @@ class Chargify
     public function product()
     {
         return new Product($this);
+    }
+
+    /**
+     * Helper for instantiating an instance of PricePoint
+     *
+     * @return PricePoint
+     */
+    public function pricePoint()
+    {
+        return new PricePoint($this);
     }
 
     /**
