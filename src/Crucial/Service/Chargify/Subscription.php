@@ -64,6 +64,20 @@ class Subscription extends AbstractEntity
     }
 
     /**
+     * The ID of a product price point that the subscription will migrate to.
+     *
+     * @param string|int $pricePointId
+     *
+     * @return Subscription
+     */
+    public function setPricePointId($pricePointId)
+    {
+        $this->setParam('product_price_point_id', $pricePointId);
+
+        return $this;
+    }
+
+    /**
      * The reference value (provided by your app) of an existing customer within
      * Chargify. Required, unless a customer_id or a set of customer_attributes
      * is given.
