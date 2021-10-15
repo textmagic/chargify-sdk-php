@@ -34,9 +34,9 @@ class PricePoint extends AbstractEntity
     }
 
     /**
-     * List all products price points
+     * List all product price points
      *
-     * @see  Product::setCurrencyPrices()
+     * @see  PricePoint::setCurrencyPrices()
      *
      * @return PricePoint
      */
@@ -45,6 +45,29 @@ class PricePoint extends AbstractEntity
         $service = $this->getService();
 
         $response      = $service->request('products/' . $id . '/price_points', 'GET', NULL, $this->getParams());
+        $responseArray = $this->getResponseArray($response);
+
+        if (!$this->isError()) {
+            $this->_data = $responseArray['price_points'];
+        } else {
+            $this->_data = array();
+        }
+
+        return $this;
+    }
+
+    /**
+     * List all component price points
+     *
+     * @see  PricePoint::setCurrencyPrices()
+     *
+     * @return PricePoint
+     */
+    public function listComponentPricePoints($id)
+    {
+        $service = $this->getService();
+
+        $response      = $service->request('components/' . $id . '/price_points', 'GET', NULL, $this->getParams());
         $responseArray = $this->getResponseArray($response);
 
         if (!$this->isError()) {

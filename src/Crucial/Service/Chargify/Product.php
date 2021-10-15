@@ -45,7 +45,7 @@ class Product extends AbstractEntity
      *
      * @return Product
      */
-    public function listProductsByFamily($productFamilyId)
+    public function listProductsFamily($productFamilyId)
     {
         $service = $this->getService();
 
