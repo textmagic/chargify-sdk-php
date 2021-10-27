@@ -20,6 +20,20 @@ namespace Crucial\Service\Chargify;
 class Component extends AbstractEntity
 {
     /**
+     * Boolean, default false. If true is passed, retrieved all components.
+     *
+     * @param bool $includeArchived
+     *
+     * @return Component
+     */
+    public function setIncludeArchived($includeArchived = false)
+    {
+        $this->setParam('include_archived', $includeArchived ? 'true' : 'false');
+
+        return $this;
+    }
+
+    /**
      * The quantity of a Quantity Based Component to assign to a subscription
      *
      * @param int $quantity

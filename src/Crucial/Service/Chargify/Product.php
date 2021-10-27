@@ -20,6 +20,20 @@ namespace Crucial\Service\Chargify;
 class Product extends AbstractEntity
 {
     /**
+     * Boolean, default false. If true is passed, retrieved all products.
+     *
+     * @param bool $includeArchived
+     *
+     * @return Product
+     */
+    public function setIncludeArchived($includeArchived = false)
+    {
+        $this->setParam('include_archived', $includeArchived ? 'true' : 'false');
+
+        return $this;
+    }
+
+    /**
      * List all products for your site
      *
      * @return Product
@@ -49,7 +63,7 @@ class Product extends AbstractEntity
     {
         $service = $this->getService();
 
-        $response      = $service->request('product_families/' . $productFamilyId . '/products', 'GET');
+        $response      = $service->request('product_families/' . $productFamilyId . '/products', 'GET', NULL, $this->getParams());
         $responseArray = $this->getResponseArray($response);
 
         if (!$this->isError()) {

@@ -20,6 +20,20 @@ namespace Crucial\Service\Chargify;
 class PricePoint extends AbstractEntity
 {
     /**
+     * Boolean, default false. If true is passed, retrieved all prices.
+     *
+     * @param bool $includeArchived
+     *
+     * @return PricePoint
+     */
+    public function setIncludeArchived($includeArchived = false)
+    {
+        $this->setParam('include_archived', $includeArchived ? 'true' : 'false');
+
+        return $this;
+    }
+
+    /**
      * Boolean, default false. If true is passed, retrieved prices for all currencies.
      *
      * @param bool $currencyPrices
