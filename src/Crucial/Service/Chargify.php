@@ -40,6 +40,7 @@ use Crucial\Service\Chargify\Subscription;
 use Crucial\Service\Chargify\PaymentProfile;
 use Crucial\Service\Chargify\Transaction;
 use Crucial\Service\Chargify\Webhook;
+use Crucial\Service\Chargify\Invoice;
 
 class Chargify
 {
@@ -368,5 +369,15 @@ class Chargify
     public function stats()
     {
         return new Stats($this);
+    }
+
+    /**
+     * Helper for instantiating an instance of Invoice
+     *
+     * @return Invoice
+     */
+    public function invoice()
+    {
+        return new Invoice($this);
     }
 }
