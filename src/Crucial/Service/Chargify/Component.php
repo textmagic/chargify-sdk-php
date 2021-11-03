@@ -48,6 +48,20 @@ class Component extends AbstractEntity
     }
 
     /**
+     * The ID of a component price point that the subscription will migrate to.
+     *
+     * @param string|int $pricePointId
+     *
+     * @return Component
+     */
+    public function setPricePointId($pricePointId)
+    {
+        $this->setParam('price_point_id', $pricePointId);
+
+        return $this;
+    }
+
+    /**
      * Create a usage for a Metered Usage Component. Note that you can also send a
      * negative number to decrease the usage.
      *
